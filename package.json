@@ -19,7 +19,9 @@
   "dependencies": {},
   "devDependencies": {
     "@request/client": "^0.1.0",
+    "coveralls": "^2.11.6",
     "extend": "^3.0.0",
+    "istanbul": "^0.4.2",
     "mocha": "^2.4.5",
     "should": "^8.2.1"
   },
@@ -29,5 +31,9 @@
     "README.md",
     "index.js"
   ],
-  "scripts": {}
+  "scripts": {
+    "test": "npm run test-ci",
+    "test-ci": "mocha",
+    "test-cov": "istanbul cover _mocha"
+  }
 }
