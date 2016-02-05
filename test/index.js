@@ -99,3 +99,42 @@ describe('aliases', () => {
       .gimme()
   })
 })
+
+describe('module', function () {
+
+  function _module () {
+    function submit () {
+      return client(this)
+    }
+
+    // config is already modified in the `aliases` test above
+    var request = init(extend, config, submit)
+
+    return request
+  }
+
+  before((done) => {
+    server = http.createServer()
+    server.on('request', (req, res) => {
+      res.writeHead(200, {'content-type': 'application/json'})
+      res.end(req.url)
+    })
+    server.listen(6767, done)
+  })
+
+  it('request', (done) => {
+    var request = _module()
+    request
+      .select('http://localhost:6767')
+      .where({a: 'b'})
+      .done((err, res, body) => {
+        should.equal(body, '/?a=b')
+        done()
+      })
+      .gimme()
+  })
+
+  after((done) => {
+    server.close(done)
+  })
+})
