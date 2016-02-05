@@ -20,9 +20,9 @@ describe('init', function () {
     var result = request.get().post()
     should.equal(typeof result.get, 'function')
   })
-  it('submit', function () {
+  it('options', function () {
     function submit () {
-      should.deepEqual(this, {})
+      should.deepEqual(this, {method: 'GET'})
     }
     var request = init(extend, api, submit)
     var result = request.get().submit()
