@@ -19,6 +19,9 @@
     "oauth"    : [],
     "headers"  : []
   },
+  "value": {
+    "callback" : []
+  },
   "custom": {
     "options"  : [],
     "auth"     : [],

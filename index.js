@@ -25,6 +25,15 @@ module.exports = (extend, config, submit) => {
     })(option)
   })
 
+  Object.keys(config.value).forEach((key) => {
+    api[key] = ((key) => {
+      return (value) => {
+        options[key] = value
+        return api
+      }
+    })(key)
+  })
+
   api.submit = submit.bind(options)
 
   return api
