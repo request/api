@@ -5,8 +5,8 @@ module.exports = function (extend, config, client) {
 
   Object.keys(config.verbs).forEach(function (verb) {
     api[verb] = function (verb) {
-
-    }.bind(api)
+      return api
+    }
   })
 
   return api

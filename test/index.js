@@ -9,8 +9,13 @@ var api = require('../config/api')
 
 
 describe('init', function () {
-  it('api', function () {
+  it('function', function () {
     var request = init(extend, api, client)
     should.equal(typeof request.get, 'function')
+  })
+  it('chain', function () {
+    var request = init(extend, api, client)
+    var result = request.get().post()
+    should.equal(typeof result.get, 'function')
   })
 })
