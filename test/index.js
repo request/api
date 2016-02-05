@@ -13,19 +13,19 @@ describe('init', () => {
     var request = init(extend, api, () => {})
     should.equal(typeof request.get, 'function')
   })
-  it('chain', () => {
+  it('function chaining', () => {
     var request = init(extend, api, () => {})
     var result = request.get().post()
     should.equal(typeof result.get, 'function')
   })
-  it('options', () => {
+  it('request options', () => {
     function submit () {
       should.deepEqual(this, {method: 'GET', url: ''})
     }
     var request = init(extend, api, submit)
     var result = request.get().submit()
   })
-  it('option methods', () => {
+  it('options method', () => {
     function submit () {
       should.deepEqual(this, {qs: {a: 'b'}})
     }
