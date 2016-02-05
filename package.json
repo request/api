@@ -1,7 +1,7 @@
 {
   "name": "@request/api",
   "version": "0.1.0",
-  "description": "Sugar API",
+  "description": "Sugar API for @request/core consumers",
   "keywords": [
     "request",
     "http",
@@ -21,7 +21,6 @@
     "@request/client": "^0.1.0",
     "extend": "^3.0.0",
     "mocha": "^2.4.5",
-    "qs": "^6.1.0",
     "should": "^8.2.1"
   },
   "main": "index.js",
