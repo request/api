@@ -10,12 +10,21 @@ var api = require('../config/api')
 
 describe('init', function () {
   it('function', function () {
-    var request = init(extend, api, client)
+    function submit () {}
+    var request = init(extend, api, submit)
     should.equal(typeof request.get, 'function')
   })
   it('chain', function () {
-    var request = init(extend, api, client)
+    function submit () {}
+    var request = init(extend, api, submit)
     var result = request.get().post()
     should.equal(typeof result.get, 'function')
+  })
+  it('submit', function () {
+    function submit () {
+      should.deepEqual(this, {})
+    }
+    var request = init(extend, api, submit)
+    var result = request.get().submit()
   })
 })
