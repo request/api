@@ -27,4 +27,11 @@ describe('init', () => {
     var request = init(extend, api, submit)
     var result = request.get().submit()
   })
+  it('option methods', () => {
+    function submit () {
+      should.deepEqual(this, {qs: {a: 'b'}})
+    }
+    var request = init(extend, api, submit)
+    var result = request.qs({a: 'b'}).submit()
+  })
 })
