@@ -17,7 +17,18 @@
     "multipart": [],
     "auth"     : [],
     "oauth"    : [],
-    "headers"  : []
+    "headers"  : [],
+    "gzip"     : [],
+    "encoding" : [],
+    "cookie"   : [],
+    "length"   : [],
+    "redirect" : [],
+    "timeout"  : [],
+    "proxy"    : [],
+    "tunnel"   : [],
+    "parse"    : [],
+    "stringify": [],
+    "end"      : []
   },
   "value": {
     "callback" : []
