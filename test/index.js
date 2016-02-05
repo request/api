@@ -24,12 +24,20 @@ describe('init', () => {
     var request = init(extend, config, submit)
     request.get().submit()
   })
-  it('options method', () => {
+  it('object method', () => {
     function submit () {
       should.deepEqual(this, {qs: {a: 'b'}})
     }
     var request = init(extend, config, submit)
     request.qs({a: 'b'}).submit()
+  })
+  it('multiple calls', () => {
+    function submit (obj) {
+      should.deepEqual(this, {qs: obj})
+    }
+    var request = init(extend, config, submit)
+    request.qs({a: 'b'}).submit.call(null, {a: 'b'})
+    request.qs({c: 'd'}).submit.call(null, {c: 'd'})
   })
 })
 
