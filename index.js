@@ -4,25 +4,25 @@ module.exports = (extend, config, submit) => {
   var api = {}
   var options = {}
 
-  Object.keys(config.verbs).forEach((verb) => {
-    api[verb] = ((verb) => {
+  Object.keys(config.verb).forEach((key) => {
+    api[key] = ((key) => {
       return (url) => {
-        options.method = verb.toUpperCase()
+        options.method = key.toUpperCase()
         options.url = url || ''
         return api
       }
-    })(verb)
+    })(key)
   })
 
-  Object.keys(config.options).forEach((option) => {
-    api[option] = ((option) => {
+  Object.keys(config.object).forEach((key) => {
+    api[key] = ((key) => {
       return (value) => {
         var obj = {}
-        obj[option] = value
+        obj[key] = value
         extend(options, obj)
         return api
       }
-    })(option)
+    })(key)
   })
 
   Object.keys(config.value).forEach((key) => {

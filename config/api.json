@@ -1,5 +1,5 @@
 {
-  "verbs": {
+  "verb": {
     "get"      : [],
     "post"     : [],
     "put"      : [],
@@ -9,7 +9,7 @@
     "options"  : [],
     "delete"   : []
   },
-  "options": {
+  "object": {
     "qs"       : [],
     "form"     : [],
     "json"     : [],
