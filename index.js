@@ -15,7 +15,7 @@ module.exports = (extend, config, submit) => {
     Object.keys(config.verb).forEach((key) => {
       api[key] = wrapVerb(key)
 
-      config.verb[key].forEach(function (alias) {
+      config.verb[key].forEach((alias) => {
         api[alias] = wrapVerb(key)
       })
     })
@@ -32,7 +32,7 @@ module.exports = (extend, config, submit) => {
     Object.keys(config.object).forEach((key) => {
       api[key] = wrapObject(key)
 
-      config.object[key].forEach(function (alias) {
+      config.object[key].forEach((alias) => {
         api[alias] = wrapObject(key)
       })
     })
@@ -47,14 +47,14 @@ module.exports = (extend, config, submit) => {
     Object.keys(config.value).forEach((key) => {
       api[key] = wrapValue(key)
 
-      config.value[key].forEach(function (alias) {
+      config.value[key].forEach((alias) => {
         api[alias] = wrapValue(key)
       })
     })
 
     api.submit = submit.bind(options)
 
-    config.custom.submit.forEach(function (alias) {
+    config.custom.submit.forEach((alias) => {
       api[alias] = submit.bind(options)
     })
 
