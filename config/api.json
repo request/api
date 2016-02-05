@@ -23,8 +23,6 @@
     "callback" : []
   },
   "custom": {
-    "options"  : [],
-    "auth"     : [],
     "submit"   : []
   }
 }

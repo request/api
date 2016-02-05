@@ -74,3 +74,28 @@ describe('request', () => {
     server.close(done)
   })
 })
+
+describe('aliases', () => {
+  before(() => {
+    config.verb.get.push('select')
+    config.object.qs.push('where')
+    config.value.callback.push('done')
+    config.custom.submit.push('gimme')
+  })
+
+  it('init', () => {
+    function submit () {
+      should.deepEqual(this, {
+        method: 'GET', url: '',
+        qs: {a: 'b'},
+        callback: 'func'
+      })
+    }
+    var request = init(extend, config, submit)
+    request
+      .select()
+      .where({a: 'b'})
+      .done('func')
+      .gimme()
+  })
+})
