@@ -8,19 +8,19 @@ var init = require('../')
 var api = require('../config/api')
 
 
-describe('init', function () {
-  it('function', function () {
+describe('init', () => {
+  it('function', () => {
     function submit () {}
     var request = init(extend, api, submit)
     should.equal(typeof request.get, 'function')
   })
-  it('chain', function () {
+  it('chain', () => {
     function submit () {}
     var request = init(extend, api, submit)
     var result = request.get().post()
     should.equal(typeof result.get, 'function')
   })
-  it('options', function () {
+  it('options', () => {
     function submit () {
       should.deepEqual(this, {method: 'GET'})
     }
