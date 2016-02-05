@@ -23,13 +23,13 @@ describe('init', () => {
       should.deepEqual(this, {method: 'GET', url: ''})
     }
     var request = init(extend, api, submit)
-    var result = request.get().submit()
+    request.get().submit()
   })
   it('options method', () => {
     function submit () {
       should.deepEqual(this, {qs: {a: 'b'}})
     }
     var request = init(extend, api, submit)
-    var result = request.qs({a: 'b'}).submit()
+    request.qs({a: 'b'}).submit()
   })
 })
