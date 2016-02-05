@@ -8,6 +8,7 @@ module.exports = (extend, config, submit) => {
     api[verb] = ((verb) => {
       return (url) => {
         options.method = verb.toUpperCase()
+        options.url = url || ''
         return api
       }
     })(verb)
