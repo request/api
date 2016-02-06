@@ -3,7 +3,7 @@
 
 [![npm-version]][npm] [![travis-ci]][travis] [![coveralls-status]][coveralls]
 
-Use this module to create sugar API for your HTTP client. You can also allow your users to define their own aliases.
+Use this module to create sugar API for your HTTP client. You can also allow your users to define their own method aliases.
 
 ```js
 var api = require('@request/api')
