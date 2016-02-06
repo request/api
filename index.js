@@ -1,5 +1,5 @@
 
-module.exports = (extend, config, submit) => {
+module.exports = (config, submit) => {
 
   return ((options) => {
     var api = {}
@@ -20,35 +20,18 @@ module.exports = (extend, config, submit) => {
       })
     })
 
-    function wrapObject (key) {
-      return (value) => {
-        var obj = {}
-        obj[key] = value
-        extend(options, obj)
-        return api
-      }
-    }
-
-    Object.keys(config.object).forEach((key) => {
-      api[key] = wrapObject(key)
-
-      config.object[key].forEach((alias) => {
-        api[alias] = wrapObject(key)
-      })
-    })
-
-    function wrapValue (key) {
+    function wrapOption (key) {
       return (value) => {
         options[key] = value
         return api
       }
     }
 
-    Object.keys(config.value).forEach((key) => {
-      api[key] = wrapValue(key)
+    Object.keys(config.option).forEach((key) => {
+      api[key] = wrapOption(key)
 
-      config.value[key].forEach((alias) => {
-        api[alias] = wrapValue(key)
+      config.option[key].forEach((alias) => {
+        api[alias] = wrapOption(key)
       })
     })
 

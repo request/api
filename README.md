@@ -8,22 +8,18 @@ Use this module to create sugar API for your HTTP client. You can also allow you
 ```js
 var api = require('@request/api')
 var client = require('@request/client')
-var extend = require('extend')
 
 var config = {
-  // HTTP verbs
+  // HTTP verb methods
   verb: {
     get: ['select']
   },
-  // options that accept object
-  object: {
-    qs: ['where']
-  },
-  // options that accept simple value
-  value: {
+  // option methods
+  option: {
+    qs: ['where'],
     callback: ['done']
   },
-  // methods that require custom handling
+  // custom methods
   custom: {
     submit: ['gimme']
   }
@@ -35,8 +31,7 @@ function submit () {
   return client(this)
 }
 
-// pass `extend` compatible module, config data structure, and a submit method
-var request = api(extend, config, submit)
+var request = api(config, submit)
 
 request
   .select('http://localhost:6767')

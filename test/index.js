@@ -1,7 +1,6 @@
 
 var http = require('http')
 var should = require('should')
-var extend = require('extend')
 var client = require('@request/client')
 var init = require('../')
 var config = require('../config/api')
@@ -9,11 +8,11 @@ var config = require('../config/api')
 
 describe('init', () => {
   it('function', () => {
-    var request = init(extend, config, () => {})
+    var request = init(config, () => {})
     should.equal(typeof request.get, 'function')
   })
   it('function chaining', () => {
-    var request = init(extend, config, () => {})
+    var request = init(config, () => {})
     var result = request.get().post()
     should.equal(typeof result.get, 'function')
   })
@@ -21,21 +20,21 @@ describe('init', () => {
     function submit () {
       should.deepEqual(this, {method: 'GET', url: ''})
     }
-    var request = init(extend, config, submit)
+    var request = init(config, submit)
     request.get().submit()
   })
   it('object method', () => {
     function submit () {
       should.deepEqual(this, {qs: {a: 'b'}})
     }
-    var request = init(extend, config, submit)
+    var request = init(config, submit)
     request.qs({a: 'b'}).submit()
   })
   it('multiple calls', () => {
     function submit (obj) {
       should.deepEqual(this, {qs: obj})
     }
-    var request = init(extend, config, submit)
+    var request = init(config, submit)
     request.qs({a: 'b'}).submit.call(null, {a: 'b'})
     request.qs({c: 'd'}).submit.call(null, {c: 'd'})
   })
@@ -58,7 +57,7 @@ describe('request', () => {
       return client(this)
     }
 
-    var request = init(extend, config, submit)
+    var request = init(config, submit)
 
     request
       .get('http://localhost:6767')
@@ -78,8 +77,8 @@ describe('request', () => {
 describe('aliases', () => {
   before(() => {
     config.verb.get.push('select')
-    config.object.qs.push('where')
-    config.value.callback.push('done')
+    config.option.qs.push('where')
+    config.option.callback.push('done')
     config.custom.submit.push('gimme')
   })
 
@@ -91,7 +90,7 @@ describe('aliases', () => {
         callback: 'func'
       })
     }
-    var request = init(extend, config, submit)
+    var request = init(config, submit)
     request
       .select()
       .where({a: 'b'})
@@ -108,7 +107,7 @@ describe('module', function () {
     }
 
     // config is already modified in the `aliases` test above
-    var request = init(extend, config, submit)
+    var request = init(config, submit)
 
     return request
   }

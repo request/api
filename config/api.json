@@ -9,7 +9,7 @@
     "options"  : [],
     "delete"   : []
   },
-  "object": {
+  "option": {
     "qs"       : [],
     "form"     : [],
     "json"     : [],
@@ -28,10 +28,8 @@
     "tunnel"   : [],
     "parse"    : [],
     "stringify": [],
+    "callback" : [],
     "end"      : []
-  },
-  "value": {
-    "callback" : []
   },
   "custom": {
     "submit"   : []
