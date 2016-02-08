@@ -2,39 +2,78 @@
 var http = require('http')
 var should = require('should')
 var client = require('@request/client')
-var init = require('../')
-var config = require('../config/api')
+var api = require('../')
 
 
 describe('init', () => {
-  it('function', () => {
-    var request = init(config, () => {})
+  it('method', () => {
+    var config = {
+      method: {get: []}
+    }
+    var request = api(config)
     should.equal(typeof request.get, 'function')
   })
-  it('function chaining', () => {
-    var request = init(config, () => {})
+  it('method chaining', () => {
+    var config = {
+      method: {get: [], post: []}
+    }
+    var request = api(config)
     var result = request.get().post()
     should.equal(typeof result.get, 'function')
   })
-  it('request options', () => {
-    function submit () {
-      should.deepEqual(this, {method: 'GET', url: ''})
+  it('chain custom', function () {
+    var config = {
+      custom: {check: [], submit: []}
     }
-    var request = init(config, submit)
+    var custom = {
+      check: function (options) {
+        options.url = 'http://localhost:6767'
+        return this
+      },
+      submit: function (options) {
+        should.deepEqual(options, {url: 'http://localhost:6767'})
+      }
+    }
+    var request = api(config, custom)
+    request.check().submit()
+  })
+  it('HTTP method', () => {
+    var config = {
+      method: {get: []},
+      custom: {submit: []}
+    }
+    var custom = {
+      submit: function (options) {
+        should.deepEqual(options, {method: 'GET', url: ''})
+      }
+    }
+    var request = api(config, custom)
     request.get().submit()
   })
-  it('object method', () => {
-    function submit () {
-      should.deepEqual(this, {qs: {a: 'b'}})
+  it('option method', () => {
+    var config = {
+      option: {qs: []},
+      custom: {submit: []}
     }
-    var request = init(config, submit)
+    var custom = {
+      submit: function (options) {
+        should.deepEqual(options, {qs: {a: 'b'}})
+      }
+    }
+    var request = api(config, custom)
     request.qs({a: 'b'}).submit()
   })
-  it('multiple calls', () => {
-    function submit (obj) {
-      should.deepEqual(this, {qs: obj})
+  it('multiple instances', () => {
+    var config = {
+      option: {qs: []},
+      custom: {submit: []}
     }
-    var request = init(config, submit)
+    var custom = {
+      submit: function (options, obj) {
+        should.deepEqual(options, {qs: obj})
+      }
+    }
+    var request = api(config, custom)
     request.qs({a: 'b'}).submit.call(null, {a: 'b'})
     request.qs({c: 'd'}).submit.call(null, {c: 'd'})
   })
@@ -53,11 +92,18 @@ describe('request', () => {
   })
 
   it('get', (done) => {
-    function submit () {
-      return client(this)
+    var config = {
+      method: {get: []},
+      option: {qs: [], callback: []},
+      custom: {submit: []}
+    }
+    var custom = {
+      submit: (options) => {
+        return client(options)
+      }
     }
 
-    var request = init(config, submit)
+    var request = api(config, custom)
 
     request
       .get('http://localhost:6767')
@@ -75,22 +121,22 @@ describe('request', () => {
 })
 
 describe('aliases', () => {
-  before(() => {
-    config.verb.get.push('select')
-    config.option.qs.push('where')
-    config.option.callback.push('done')
-    config.custom.submit.push('gimme')
-  })
-
   it('init', () => {
-    function submit () {
-      should.deepEqual(this, {
-        method: 'GET', url: '',
-        qs: {a: 'b'},
-        callback: 'func'
-      })
+    var config = {
+      method: {get: ['select']},
+      option: {qs: ['where'], callback: ['done']},
+      custom: {submit: ['gimme']}
     }
-    var request = init(config, submit)
+    var custom = {
+      submit: (options) => {
+        should.deepEqual(options, {
+          method: 'GET', url: '',
+          qs: {a: 'b'},
+          callback: 'func'
+        })
+      }
+    }
+    var request = api(config, custom)
     request
       .select()
       .where({a: 'b'})
@@ -99,16 +145,27 @@ describe('aliases', () => {
   })
 })
 
-describe('module', function () {
+describe('module', () => {
 
   function _module () {
-    function submit () {
-      return client(this)
+    var config = {
+      method: {get: ['select']},
+      option: {qs: ['where'], callback: ['done']},
+      custom: {check: [], submit: ['gimme']}
+    }
+    var custom = {
+      check: function (options, host) {
+        if (/localhost/.test(host)) {
+          options.url += ':6767'
+        }
+        return this
+      },
+      submit: function (options) {
+        return client(options)
+      }
     }
 
-    // config is already modified in the `aliases` test above
-    var request = init(config, submit)
-
+    var request = api(config, custom)
     return request
   }
 
@@ -124,7 +181,8 @@ describe('module', function () {
   it('request', (done) => {
     var request = _module()
     request
-      .select('http://localhost:6767')
+      .select('http://localhost')
+      .check('localhost')
       .where({a: 'b'})
       .done((err, res, body) => {
         should.equal(body, '/?a=b')

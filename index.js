@@ -1,10 +1,10 @@
 
-module.exports = (config, submit) => {
+module.exports = (config, custom) => {
 
   return ((options) => {
     var api = {}
 
-    function wrapVerb (key) {
+    function wrapMethod (key) {
       return (url) => {
         options.method = key.toUpperCase()
         options.url = url || ''
@@ -12,11 +12,11 @@ module.exports = (config, submit) => {
       }
     }
 
-    Object.keys(config.verb).forEach((key) => {
-      api[key] = wrapVerb(key)
+    Object.keys(config.method || {}).forEach((key) => {
+      api[key] = wrapMethod(key)
 
-      config.verb[key].forEach((alias) => {
-        api[alias] = wrapVerb(key)
+      config.method[key].forEach((alias) => {
+        api[alias] = wrapMethod(key)
       })
     })
 
@@ -27,7 +27,7 @@ module.exports = (config, submit) => {
       }
     }
 
-    Object.keys(config.option).forEach((key) => {
+    Object.keys(config.option || {}).forEach((key) => {
       api[key] = wrapOption(key)
 
       config.option[key].forEach((alias) => {
@@ -35,10 +35,16 @@ module.exports = (config, submit) => {
       })
     })
 
-    api.submit = submit.bind(options)
+    function wrapCustom (key) {
+      return custom[key].bind(api, options)
+    }
 
-    config.custom.submit.forEach((alias) => {
-      api[alias] = submit.bind(options)
+    Object.keys(config.custom || {}).forEach((key) => {
+      api[key] = wrapCustom(key)
+
+      config.custom[key].forEach((alias) => {
+        api[alias] = wrapCustom(key)
+      })
     })
 
     return api

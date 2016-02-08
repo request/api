@@ -9,36 +9,50 @@ Use this module to create sugar API for your HTTP client. You can also allow you
 var api = require('@request/api')
 var client = require('@request/client')
 
+// all API methods and their aliases
 var config = {
-  // HTTP verb methods
-  verb: {
+  // HTTP methods
+  method: {
     get: ['select']
   },
-  // option methods
+  // @request/core option methods
   option: {
     qs: ['where'],
     callback: ['done']
   },
   // custom methods
   custom: {
+    check: [],
     submit: ['gimme']
   }
 }
 
-
-function submit () {
-  // `this` contains the options object that you usually pass to @request/core
-  return client(this)
+// custom method implementation
+var custom = {
+  // `host` is parameter passed to your method
+  check: function (options, host) {
+    if (/localhost/.test(host)) {
+      options.url += ':6767'
+    }
+    // `this` contains the API itself, for chaining purposes
+    return this
+  },
+  // `options` contains the generated options object from the preceding methods
+  submit: function (options) {
+    // the last method should return a @request/core consumer
+    return client(options)
+  }
 }
 
-var request = api(config, submit)
+var request = api(config, custom)
 
+// GET http://localhost:6767?a=b
 request
-  .select('http://localhost:6767')
+  .select('http://localhost')
+  .check('localhost')
   .where({a: 'b'})
   .done((err, res, body) => {
-    // aaa
-    // mazing
+    // request callback
   })
   .gimme()
 ```

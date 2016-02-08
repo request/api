@@ -1,5 +1,5 @@
 {
-  "verb": {
+  "method": {
     "get"      : [],
     "post"     : [],
     "put"      : [],
