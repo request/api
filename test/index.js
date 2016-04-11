@@ -1,6 +1,6 @@
 
+var t = require('assert')
 var http = require('http')
-var should = require('should')
 var client = require('@request/client')
 var api = require('../')
 
@@ -11,7 +11,7 @@ describe('init', () => {
       method: {get: []}
     }
     var request = api(config)
-    should.equal(typeof request.get, 'function')
+    t.equal(typeof request.get, 'function')
   })
   it('method chaining', () => {
     var config = {
@@ -19,9 +19,9 @@ describe('init', () => {
     }
     var request = api(config)
     var result = request.get().post()
-    should.equal(typeof result.get, 'function')
+    t.equal(typeof result.get, 'function')
   })
-  it('chain custom', function () {
+  it('chain custom', () => {
     var config = {
       custom: {check: [], submit: []}
     }
@@ -31,7 +31,7 @@ describe('init', () => {
         return this
       },
       submit: function (options) {
-        should.deepEqual(options, {url: 'http://localhost:6767'})
+        t.deepEqual(options, {url: 'http://localhost:6767'})
       }
     }
     var request = api(config, custom)
@@ -44,7 +44,7 @@ describe('init', () => {
     }
     var custom = {
       submit: function (options) {
-        should.deepEqual(options, {method: 'GET', url: ''})
+        t.deepEqual(options, {method: 'GET', url: ''})
       }
     }
     var request = api(config, custom)
@@ -57,7 +57,7 @@ describe('init', () => {
     }
     var custom = {
       submit: function (options) {
-        should.deepEqual(options, {qs: {a: 'b'}})
+        t.deepEqual(options, {qs: {a: 'b'}})
       }
     }
     var request = api(config, custom)
@@ -70,7 +70,7 @@ describe('init', () => {
     }
     var custom = {
       submit: function (options, obj) {
-        should.deepEqual(options, {qs: obj})
+        t.deepEqual(options, {qs: obj})
       }
     }
     var request = api(config, custom)
@@ -109,7 +109,7 @@ describe('request', () => {
       .get('http://localhost:6767')
       .qs({a: 'b'})
       .callback((err, res, body) => {
-        should.equal(body, '/?a=b')
+        t.equal(body, '/?a=b')
         done()
       })
       .submit()
@@ -129,7 +129,7 @@ describe('aliases', () => {
     }
     var custom = {
       submit: (options) => {
-        should.deepEqual(options, {
+        t.deepEqual(options, {
           method: 'GET', url: '',
           qs: {a: 'b'},
           callback: 'func'
@@ -185,7 +185,7 @@ describe('module', () => {
       .check('localhost')
       .where({a: 'b'})
       .done((err, res, body) => {
-        should.equal(body, '/?a=b')
+        t.equal(body, '/?a=b')
         done()
       })
       .gimme()

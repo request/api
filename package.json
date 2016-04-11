@@ -21,8 +21,7 @@
     "@request/client": "^0.1.0",
     "coveralls": "^2.11.6",
     "istanbul": "^0.4.2",
-    "mocha": "^2.4.5",
-    "should": "^8.2.1"
+    "mocha": "^2.4.5"
   },
   "main": "index.js",
   "files": [
