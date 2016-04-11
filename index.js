@@ -1,52 +1,49 @@
 
-module.exports = (config, custom) => {
+module.exports = (config, custom) => ((options) => {
+  var api = {}
 
-  return ((options) => {
-    var api = {}
-
-    function wrapMethod (key) {
-      return (url) => {
-        options.method = key.toUpperCase()
-        options.url = url || ''
-        return api
-      }
+  function wrapMethod (key) {
+    return (url) => {
+      options.method = key.toUpperCase()
+      options.url = url || ''
+      return api
     }
+  }
 
-    Object.keys(config.method || {}).forEach((key) => {
-      api[key] = wrapMethod(key)
+  Object.keys(config.method || {}).forEach((key) => {
+    api[key] = wrapMethod(key)
 
-      config.method[key].forEach((alias) => {
-        api[alias] = wrapMethod(key)
-      })
+    config.method[key].forEach((alias) => {
+      api[alias] = wrapMethod(key)
     })
+  })
 
-    function wrapOption (key) {
-      return (value) => {
-        options[key] = value
-        return api
-      }
+  function wrapOption (key) {
+    return (value) => {
+      options[key] = value
+      return api
     }
+  }
 
-    Object.keys(config.option || {}).forEach((key) => {
-      api[key] = wrapOption(key)
+  Object.keys(config.option || {}).forEach((key) => {
+    api[key] = wrapOption(key)
 
-      config.option[key].forEach((alias) => {
-        api[alias] = wrapOption(key)
-      })
+    config.option[key].forEach((alias) => {
+      api[alias] = wrapOption(key)
     })
+  })
 
-    function wrapCustom (key) {
-      return custom[key].bind(api, options)
-    }
+  function wrapCustom (key) {
+    return custom[key].bind(api, options)
+  }
 
-    Object.keys(config.custom || {}).forEach((key) => {
-      api[key] = wrapCustom(key)
+  Object.keys(config.custom || {}).forEach((key) => {
+    api[key] = wrapCustom(key)
 
-      config.custom[key].forEach((alias) => {
-        api[alias] = wrapCustom(key)
-      })
+    config.custom[key].forEach((alias) => {
+      api[alias] = wrapCustom(key)
     })
+  })
 
-    return api
-  })({})
-}
+  return api
+})({})
