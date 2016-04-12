@@ -65,17 +65,21 @@ describe('init', () => {
   })
   it('multiple instances', () => {
     var config = {
-      option: {qs: []},
+      option: {qs: [], form: []},
       custom: {submit: []}
     }
     var custom = {
-      submit: function (options, obj) {
-        t.deepEqual(options, {qs: obj})
+      submit: function (options) {
+        return options
       }
     }
-    var request = api(config, custom)
-    request.qs({a: 'b'}).submit.call(null, {a: 'b'})
-    request.qs({c: 'd'}).submit.call(null, {c: 'd'})
+
+    var a = api(config, custom).qs({a: 1})
+    var b = api(config, custom).qs({b: 2})
+    a.form({c: 3})
+
+    t.deepEqual(a.submit(), {qs: {a: 1}, form: {c: 3}})
+    t.deepEqual(b.submit(), {qs: {b: 2}})
   })
 })
 
@@ -165,8 +169,7 @@ describe('module', () => {
       }
     }
 
-    var request = api(config, custom)
-    return request
+    return api(config, custom)
   }
 
   before((done) => {
