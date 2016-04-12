@@ -1,6 +1,6 @@
 {
   "name": "@request/api",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Sugar API for @request/core consumers",
   "keywords": [
     "request",
