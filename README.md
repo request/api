@@ -3,13 +3,11 @@
 
 [![npm-version]][npm] [![travis-ci]][travis] [![coveralls-status]][coveralls]
 
-Use this module to create sugar API for your HTTP client. You can also allow your users to define their own method aliases.
-
 ```js
 var api = require('@request/api')
 var client = require('@request/client')
 
-// all API methods and their aliases
+// API methods configuration
 var config = {
   // HTTP methods
   method: {
@@ -17,44 +15,38 @@ var config = {
   },
   // @request/core option methods
   option: {
-    qs: ['where'],
-    callback: ['done']
+    qs: ['where']
   },
   // custom methods
   custom: {
-    check: [],
-    submit: ['gimme']
+    request: ['fetch', 'snatch', 'submit']
   }
 }
 
-// custom method implementation
+// custom methods implementation
 var custom = {
-  // `host` is parameter passed to your method
-  check: function (options, host) {
-    if (/localhost/.test(host)) {
-      options.url += ':6767'
+  // pass any arguments to your custom methods
+  request: function (callback) {
+    if (callback) {
+      // `this._options` contains the generated options object
+      this._options.callback = callback
     }
-    // `this` contains the API itself, for chaining purposes
-    return this
-  },
-  // `options` contains the generated options object from the preceding methods
-  submit: function (options) {
-    // the last method should return a @request/core consumer
-    return client(options)
+    // the last method should return @request/core consumer
+    return client(this._options)
+    // return `this` if you want to chain further
   }
 }
 
+// initialize the API
 var request = api(config, custom)
 
-// GET http://localhost:6767?a=b
+// GET http://localhost:6767?a=1
 request
-  .select('http://localhost')
-  .check('localhost')
-  .where({a: 'b'})
-  .done((err, res, body) => {
+  .select('http://localhost:6767')
+  .where({a: 1})
+  .fetch((err, res, body) => {
     // request callback
   })
-  .gimme()
 ```
 
 > See [@request/core][request-core] for more details.
