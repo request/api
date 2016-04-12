@@ -1,35 +1,57 @@
 
-function API (config, custom) {
-  this.options = {}
-
-  var api = {}
+module.exports = (config, custom) => {
 
   var wrap = {
-    method: (key) => ((url) => {
-      this.options.method = key.toUpperCase()
-      this.options.url = url || ''
-      return api
-    }),
-    option: (key) => ((value) => {
-      this.options[key] = value
-      return api
-    }),
-    custom: (key) => custom[key].bind(api, this.options)
+    method: function (key) {
+      return (value) => {
+        if (!this._options) {
+          var api = init()
+          api._options = {}
+          return api[key](value)
+        }
+        this._options.method = key.toUpperCase()
+        this._options.url = value || ''
+        return this
+      }
+    },
+    option: function (key) {
+      return (value) => {
+        if (!this._options) {
+          var api = init()
+          api._options = {}
+          return api[key](value)
+        }
+        this._options[key] = value
+        return this
+      }
+    },
+    custom: function (key) {
+      return function () {
+        if (!this._options) {
+          var api = init()
+          api._options = {}
+          return custom[key].apply(api, arguments)
+        }
+        return custom[key].apply(this, arguments)
+      }.bind(this)
+    }
   }
 
-  Object.keys(config).forEach((type) => {
-    Object.keys(config[type]).forEach((method) => {
-      api[method] = wrap[type](method)
+  function init () {
+    var api = {}
 
-      config[type][method].forEach((alias) => {
-        api[alias] = wrap[type](method)
+    Object.keys(config).forEach((type) => {
+      Object.keys(config[type]).forEach((method) => {
+        api[method] = wrap[type].call(api, method)
+
+        config[type][method].forEach((alias) => {
+          api[alias] = wrap[type].call(api, method)
+        })
       })
     })
-  })
 
-  return api
-}
+    return api
+  }
 
-module.exports = (config, custom) => {
-  return new API(config, custom)
+  return init()
 }
