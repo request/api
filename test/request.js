@@ -17,19 +17,39 @@ describe('request', () => {
     server.listen(6767, done)
   })
 
-  it('get', (done) => {
-    var config = {
-      method: {get: []},
-      option: {qs: [], callback: []},
-      custom: {submit: []}
-    }
-    var custom = {
-      submit: function () {
-        return client(this._options)
-      }
-    }
+  it('basic', (done) => {
+    var request = api({
+      type: 'basic',
+      config: {
+        method: {get: []},
+        option: {},
+        custom: {request: []}
+      },
+      request: client
+    })
 
-    var request = api(config, custom)
+    request('http://localhost:6767', {qs: {a: 1}}, (err, res, body) => {
+      t.equal(err, null)
+      t.equal(res.statusCode, 202)
+      t.equal(body, '/?a=1')
+      done()
+    })
+  })
+
+  it('chain', (done) => {
+    var request = api({
+      type: 'chain',
+      config: {
+        method: {get: []},
+        option: {qs: [], callback: []},
+        custom: {request: []}
+      },
+      define: {
+        request: function () {
+          return client(this._options)
+        }
+      }
+    })
 
     request
       .get('http://localhost:6767')
@@ -40,7 +60,7 @@ describe('request', () => {
         t.equal(body, '/?a=1')
         done()
       })
-      .submit()
+      .request()
   })
 
   after((done) => {
