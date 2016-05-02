@@ -3,42 +3,84 @@
 
 [![npm-version]][npm] [![travis-ci]][travis] [![coveralls-status]][coveralls]
 
+
+## Basic API
+
+```js
+request('url')
+request({options})
+request('url', function callback (err, res, body) {})
+request({options}, function callback (err, res, body) {})
+request('url', {options}, function callback (err, res, body) {})
+
+request[HTTP_VERB]('url')
+request[HTTP_VERB]({options})
+request[HTTP_VERB]('url', function callback (err, res, body) {})
+request[HTTP_VERB]({options}, function callback (err, res, body) {})
+request[HTTP_VERB]('url', {options}, function callback (err, res, body) {})
+```
+
 ```js
 var api = require('@request/api')
 var client = require('@request/client')
 
-// API methods configuration
-var config = {
-  // HTTP methods
-  method: {
-    get: ['select']
-  },
-  // @request/core option methods
-  option: {
-    qs: ['where']
-  },
-  // custom methods
-  custom: {
-    request: ['fetch', 'snatch', 'submit']
-  }
-}
+// initialize the API
+var request = api({
+  type: 'basic',
+  // pass HTTP request function
+  // that accepts @request/interface options
+  request: client
+})
 
-// custom methods implementation
-var custom = {
-  // pass any arguments to your custom methods
-  request: function (callback) {
-    if (callback) {
-      // `this._options` contains the generated options object
-      this._options.callback = callback
-    }
-    // the last method should return @request/core consumer
-    return client(this._options)
-    // return `this` if you want to chain further
-  }
-}
+// GET http://localhost:6767?a=1
+request.get('http://localhost:6767', {qs: {a: 1}}, (err, res, body) => {
+  // request callback
+})
+```
+
+
+## Chain API
+
+```js
+var api = require('@request/api')
+var client = require('@request/client')
 
 // initialize the API
-var request = api(config, custom)
+var request = api({
+  type: 'chain',
+  // API methods configuration
+  config: {
+    // HTTP methods
+    method: {
+      get: ['select'],
+      // ...
+    },
+    // @request/interface option methods
+    option: {
+      qs: ['where'],
+      // ...
+    },
+    // custom methods
+    custom: {
+      request: ['fetch', 'snatch', 'submit'],
+      // ...
+    }
+  },
+  // custom methods implementation
+  define: {
+    // pass any arguments to your custom methods
+    request: function (callback) {
+      if (callback) {
+        // `this._options` contains the generated options object
+        this._options.callback = callback
+      }
+      // the last method should return @request/interface consumer
+      return client(this._options)
+      // or
+      return this // if you want to chain further
+    }
+  }
+})
 
 // GET http://localhost:6767?a=1
 request
