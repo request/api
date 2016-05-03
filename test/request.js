@@ -53,6 +53,59 @@ describe('request', () => {
       .request()
   })
 
+  it('wrap request method and pass a callback to it', (done) => {
+    var request = api({
+      type: 'chain',
+      define: {
+        request: (options, callback) => {
+          if (callback) {
+            options.callback = callback
+          }
+          return client(options)
+        }
+      }
+    })
+
+    request
+      .get('http://localhost:6767')
+      .qs({a: 1})
+      .request((err, res, body) => {
+        t.equal(err, null)
+        t.equal(res.statusCode, 202)
+        t.equal(body, '/?a=1')
+        done()
+      })
+  })
+
+  it('wrap request method and return a Promise', (done) => {
+    var request = api({
+      type: 'chain',
+      define: {
+        request: (options) => {
+          var promise = new Promise((resolve, reject) => {
+            options.callback = (err, res, body) => {
+              ;(err) ? reject(err) : resolve([res, body])
+            }
+          })
+          client(options)
+          return promise
+        }
+      }
+    })
+
+    request
+      .get('http://localhost:6767')
+      .qs({a: 1})
+      .request()
+      .then((result) => {
+        var res = result[0]
+        var body = result[1]
+        t.equal(res.statusCode, 202)
+        t.equal(body, '/?a=1')
+        done()
+      })
+  })
+
   after((done) => {
     server.close(done)
   })
