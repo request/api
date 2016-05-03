@@ -8,9 +8,9 @@ var chain = require('./lib/chain')
 
 module.exports = (options) => {
 
-  var common = interface.common.reduce((prev, curr) => {
-    prev[curr] = []
-    return prev
+  var common = interface.common.reduce((obj, key) => {
+    obj[key] = []
+    return obj
   }, {})
 
   var methods = {}
