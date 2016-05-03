@@ -4,6 +4,27 @@
 [![npm-version]][npm] [![travis-ci]][travis] [![coveralls-status]][coveralls]
 
 
+## Options
+
+```js
+var api = require('@request/api')
+var request = api({
+  // required
+  type: 'basic', // or 'chain'
+  // required
+  define: {
+    // HTTP request function
+    // that accepts @request/interface options object
+    request: require('@request/client')
+  },
+  // optional
+  config: {
+    // define your own methods and method aliases
+  }
+})
+```
+
+
 ## Basic API
 
 ```js
@@ -13,23 +34,22 @@ request('url', function callback (err, res, body) {})
 request({options}, function callback (err, res, body) {})
 request('url', {options}, function callback (err, res, body) {})
 
-request[HTTP_VERB]('url')
-request[HTTP_VERB]({options})
-request[HTTP_VERB]('url', function callback (err, res, body) {})
-request[HTTP_VERB]({options}, function callback (err, res, body) {})
-request[HTTP_VERB]('url', {options}, function callback (err, res, body) {})
+request.[HTTP_VERB]('url')
+request.[HTTP_VERB]({options})
+request.[HTTP_VERB]('url', function callback (err, res, body) {})
+request.[HTTP_VERB]({options}, function callback (err, res, body) {})
+request.[HTTP_VERB]('url', {options}, function callback (err, res, body) {})
 ```
 
 ```js
 var api = require('@request/api')
 var client = require('@request/client')
 
-// initialize the API
 var request = api({
   type: 'basic',
-  // pass HTTP request function
-  // that accepts @request/interface options
-  request: client
+  define: {
+    request: client
+  }
 })
 
 // GET http://localhost:6767?a=1
@@ -45,39 +65,61 @@ request.get('http://localhost:6767', {qs: {a: 1}}, (err, res, body) => {
 var api = require('@request/api')
 var client = require('@request/client')
 
-// initialize the API
+var request = api({
+  type: 'query',
+  define: {
+    request: client
+  }
+})
+
+// GET http://localhost:6767?a=1
+request
+  .get('http://localhost:6767')
+  .qs({a: 1})
+  .callback((err, res, body) => {
+    // request callback
+  })
+  .request()
+```
+
+
+## Chain API Config
+
+```js
+var api = require('@request/api')
+var client = require('@request/client')
+
 var request = api({
   type: 'chain',
   // API methods configuration
   config: {
     // HTTP methods
     method: {
-      get: ['select'],
+      get: ['select'], // list of aliases
       // ...
     },
     // @request/interface option methods
     option: {
-      qs: ['where'],
+      qs: ['where'], // list of aliases
       // ...
     },
     // custom methods
     custom: {
-      request: ['fetch', 'snatch', 'submit'],
+      request: ['fetch', 'snatch', 'submit'], // list of aliases
       // ...
     }
   },
   // custom methods implementation
   define: {
-    // pass any arguments to your custom methods
-    request: function (callback) {
+    // `options` is always prepended as first argument
+    // any other custom arguments follows after that
+    request: (options, callback) => {
       if (callback) {
-        // `this._options` contains the generated options object
-        this._options.callback = callback
+        // `options` contains the generated options object
+        options.callback = callback
       }
-      // the last method should return @request/interface consumer
-      return client(this._options)
-      // or
-      return this // if you want to chain further
+      // omit the return value if you want to chain further
+      return client(options)
     }
   }
 })

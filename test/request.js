@@ -37,9 +37,7 @@ describe('request', () => {
     var request = api({
       type: 'chain',
       define: {
-        request: function () {
-          return client(this._options)
-        }
+        request: client
       }
     })
 
