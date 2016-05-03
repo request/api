@@ -4,6 +4,15 @@
 [![npm-version]][npm] [![travis-ci]][travis] [![coveralls-status]][coveralls]
 
 
+## Table of Contents
+
+- [Options](#options)
+- [Basic API](#basic-api)
+- [Chain API](#chain-api)
+- [Chain API Config](#chain-api-config)
+- [Promises](#promises)
+
+
 ## Options
 
 ```js
@@ -66,7 +75,7 @@ var api = require('@request/api')
 var client = require('@request/client')
 
 var request = api({
-  type: 'query',
+  type: 'chain',
   define: {
     request: client
   }
@@ -131,6 +140,53 @@ request
   .fetch((err, res, body) => {
     // request callback
   })
+```
+
+
+## Promises
+
+```js
+var api = require('@request/api')
+var client = require('@request/client')
+
+function wrap (options) {
+  var promise = new Promise((resolve, reject) => {
+    options.callback = (err, res, body) => {
+      ;(err) ? reject(err) : resolve([res, body])
+    }
+  })
+  client(options)
+  return promise
+}
+```
+
+```js
+var request = api({
+  type: 'basic',
+  define: {
+    request: wrap
+  }
+})
+// GET http://localhost:6767?a=1
+request.get('http://localhost:6767', {qs: 1})
+  .catch((err) => {})
+  .then((result) => {})
+```
+
+```js
+var request = api({
+  type: 'chain',
+  define: {
+    request: wrap
+  }
+})
+// GET http://localhost:6767?a=1
+request
+  .get('http://localhost:6767')
+  .qs({a: 1})
+  .request()
+  .catch((err) => ())
+  .then((result) => ())
 ```
 
 
