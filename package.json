@@ -1,12 +1,11 @@
 {
   "name": "@request/api",
   "version": "0.5.0",
-  "description": "Sugar API for @request/core consumers",
+  "description": "Sugar API for @request/interface consumers",
   "keywords": [
-    "request",
     "http",
     "https",
-    "curl",
+    "request",
     "api"
   ],
   "license": "Apache-2.0",
