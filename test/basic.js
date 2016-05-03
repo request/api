@@ -8,9 +8,7 @@ describe('basic', () => {
     it('request(url)', () => {
       var request = api({
         type: 'basic',
-        request: (options) => {
-          return options
-        }
+        define: {request: (options) => (options)}
       })
       t.deepEqual(
         request('u'),
@@ -20,9 +18,7 @@ describe('basic', () => {
     it('request(options)', () => {
       var request = api({
         type: 'basic',
-        request: (options) => {
-          return options
-        }
+        define: {request: (options) => (options)}
       })
       function callback () {}
       t.deepEqual(
@@ -33,9 +29,7 @@ describe('basic', () => {
     it('request(url, callback)', () => {
       var request = api({
         type: 'basic',
-        request: (options) => {
-          return options
-        }
+        define: {request: (options) => (options)}
       })
       function callback () {}
       t.deepEqual(
@@ -46,9 +40,7 @@ describe('basic', () => {
     it('request(options, callback)', () => {
       var request = api({
         type: 'basic',
-        request: (options) => {
-          return options
-        }
+        define: {request: (options) => (options)}
       })
       function callback () {}
       t.deepEqual(
@@ -59,9 +51,7 @@ describe('basic', () => {
     it('request(url, options, callback)', () => {
       var request = api({
         type: 'basic',
-        request: (options) => {
-          return options
-        }
+        define: {request: (options) => (options)}
       })
       function callback () {}
       t.deepEqual(
@@ -75,9 +65,7 @@ describe('basic', () => {
     it('request.get(url)', () => {
       var request = api({
         type: 'basic',
-        request: (options) => {
-          return options
-        }
+        define: {request: (options) => (options)}
       })
       t.deepEqual(
         request.get('u'),
@@ -88,9 +76,7 @@ describe('basic', () => {
     it('request.get(options)', () => {
       var request = api({
         type: 'basic',
-        request: (options) => {
-          return options
-        }
+        define: {request: (options) => (options)}
       })
       function callback () {}
       t.deepEqual(
@@ -101,9 +87,7 @@ describe('basic', () => {
     it('request.get(url, callback)', () => {
       var request = api({
         type: 'basic',
-        request: (options) => {
-          return options
-        }
+        define: {request: (options) => (options)}
       })
       function callback () {}
       t.deepEqual(
@@ -114,9 +98,7 @@ describe('basic', () => {
     it('request.get(options, callback)', () => {
       var request = api({
         type: 'basic',
-        request: (options) => {
-          return options
-        }
+        define: {request: (options) => (options)}
       })
       function callback () {}
       t.deepEqual(
@@ -127,9 +109,7 @@ describe('basic', () => {
     it('request.get(url, options, callback)', () => {
       var request = api({
         type: 'basic',
-        request: (options) => {
-          return options
-        }
+        define: {request: (options) => (options)}
       })
       function callback () {}
       t.deepEqual(

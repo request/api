@@ -115,4 +115,17 @@ describe('chain', () => {
       request.select('u').where({a: 1}).gimme(),
       {method: 'GET', url: 'u', qs: {a: 1}})
   })
+  it('default interface', () => {
+    var request = api({
+      type: 'chain',
+      define: {
+        request: function () {
+          return this._options
+        }
+      }
+    })
+    t.deepEqual(
+      request.get('u').qs({a: 1}).request(),
+      {method: 'GET', url: 'u', qs: {a: 1}})
+  })
 })

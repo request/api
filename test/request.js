@@ -20,12 +20,9 @@ describe('request', () => {
   it('basic', (done) => {
     var request = api({
       type: 'basic',
-      config: {
-        method: {get: []},
-        option: {},
-        custom: {request: []}
-      },
-      request: client
+      define: {
+        request: client
+      }
     })
 
     request('http://localhost:6767', {qs: {a: 1}}, (err, res, body) => {
@@ -39,11 +36,6 @@ describe('request', () => {
   it('chain', (done) => {
     var request = api({
       type: 'chain',
-      config: {
-        method: {get: []},
-        option: {qs: [], callback: []},
-        custom: {request: []}
-      },
       define: {
         request: function () {
           return client(this._options)

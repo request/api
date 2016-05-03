@@ -1,14 +1,25 @@
 
+var extend = require('extend')
+var interface = require('@request/interface')
+var config = require('./config/methods')
 var basic = require('./lib/basic')
 var chain = require('./lib/chain')
-var config = require('./config/methods')
 
 
 module.exports = (options) => {
+
+  var common = interface.common.reduce((prev, curr) => {
+    prev[curr] = []
+    return prev
+  }, {})
+
+  var methods = {}
+  extend(true, methods, config, {option: common}, options.config)
+
   if (options.type === 'basic') {
-    return basic(options.config || config, options.request)
+    return basic(methods, options.define)
   }
   else if (options.type === 'chain') {
-    return chain(options.config, options.define)
+    return chain(methods, options.define)
   }
 }

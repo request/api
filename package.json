@@ -17,7 +17,9 @@
     "url": "https://github.com/request/api.git"
   },
   "dependencies": {
-    "deep-copy": "^1.1.2"
+    "@request/interface": "^0.1.0",
+    "deep-copy": "^1.1.2",
+    "extend": "^3.0.0"
   },
   "devDependencies": {
     "@request/client": "^0.1.0",
